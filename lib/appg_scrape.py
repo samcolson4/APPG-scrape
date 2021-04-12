@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 import requests
 import re
+from twitter_scrape import getTwitterURL
+
 
 def callScrape(url):
     macro_data = []
@@ -68,11 +70,9 @@ def checkBenefits(soup):
     benefits = ""
     
     table = soup.find_all(class_="basicTable")
-    print(len(table))
 
     if len(table) >= 6:
       source = table[5].find_all('p')[7].text
-      print(source)
       benefits = source
     
     return benefits
@@ -91,10 +91,19 @@ def getData(url):
     # Chair party
     chair_party = getChairParty(soup)
 
-    # 
+    # Benefits in kind
     benefits_in_kind = checkBenefits(soup)
 
-    data = [group_name, chair_name, chair_party]
+    # Twitter
+    search_name = group_name.replace(" ", "+")
+    search_url = "https://www.google.com/search?q=" + "all+party+parliamentary+group+for+" + search_name + "+twitter"
+
+    twitter_url = getTwitterURL(search_url)
+    print(search_url)
+
+
+
+    data = [group_name, chair_name, chair_party, benefits_in_kind]
     
     print(data)
     print("\n")
