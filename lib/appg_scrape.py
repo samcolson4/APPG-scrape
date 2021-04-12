@@ -10,26 +10,25 @@ def callScrape(url):
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
     block = soup.find(id="mainTextBlock")
+    
     groups = block.find_all('ul')
     countries = groups[0]
     subjects = groups[1]
 
-    country_links = getLink(countries)
-    subject_links = getLink(subjects)
+    country_links = getLinks(countries)
+    subject_links = getLinks(subjects)
 
     links = country_links + subject_links
-    print(links)
     
     return macro_data
 
 
-def getLink(block):
+def getLinks(block):
     links = []
 
     for group in block:
 
         link = group.find('a')
-        # print(link)
 
         if type(link) is int:
           group_link = "void"
@@ -38,7 +37,6 @@ def getLink(block):
           group_link = "https://publications.parliament.uk/pa/cm/cmallparty/210310/" + href
           links.append(group_link)
 
-    # print(links)
     return links
 
 
