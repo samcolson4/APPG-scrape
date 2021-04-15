@@ -99,6 +99,21 @@ def getAGM(soup):
 
     return agm
 
+def getContact(soup):
+    contact = ""
+
+    tables = soup.find_all(class_="basicTable")
+
+    if tables[2]:
+      words = tables[2].find_all('p')
+      
+      if 'Email: ' in words[3].text:
+        contact = words[3].text.replace("Email: ", "").replace("\n", "")
+      else:
+        contact = "No email"
+
+    return contact
+
 
 def getData(url):
     page = requests.get(url)
@@ -119,10 +134,12 @@ def getData(url):
     # Most recent AGM
     last_agm = getAGM(soup)
 
+    contact = getContact(soup)
+
     # Twitter
     # twitter_url = getTwitterURL(group_name, driver)
 
-    data = [group_name, chair_name, chair_party, benefits_in_kind, last_agm]
+    data = [group_name, chair_name, chair_party, benefits_in_kind, last_agm, contact]
     
     # driver.quit()
 
