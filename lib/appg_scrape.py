@@ -5,6 +5,17 @@ import requests
 import re
 from twitter_scrape import getTwitterURL
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+import os
+
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--window-size=1920x1080")
+
+driver = webdriver.Chrome(options=chrome_options,
+                          executable_path='./chromedriver')
 
 def callScrape(url):
     macro_data = []
@@ -83,7 +94,7 @@ def getData(url):
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Group Name
-    group_name = soup.find(class_="subHead").text
+    group_name = "APPG for " + soup.find(class_="subHead").text
 
     # Chair name
     chair_name = getChairName(soup)
@@ -95,16 +106,12 @@ def getData(url):
     benefits_in_kind = checkBenefits(soup)
 
     # Twitter
-    search_name = group_name.replace(" ", "+")
-    search_url = "https://www.google.com/search?q=" + "all+party+parliamentary+group+for+" + search_name + "+twitter"
-
-    twitter_url = getTwitterURL(search_url)
-    print(search_url)
-
-
-
+    # twitter_url = getTwitterURL(group_name, driver)
+  
     data = [group_name, chair_name, chair_party, benefits_in_kind]
     
+    # driver.quit()
+
     print(data)
     print("\n")
     return data
