@@ -88,6 +88,17 @@ def checkBenefits(soup):
     
     return benefits
 
+def getAGM(soup):
+    agm = ""
+
+    tables = soup.find_all(class_="basicTable")
+    
+    if tables[3]:
+      words = tables[3].find_all('p')
+      agm = words[2].text
+
+    return agm
+
 
 def getData(url):
     page = requests.get(url)
@@ -105,10 +116,13 @@ def getData(url):
     # Benefits in kind
     benefits_in_kind = checkBenefits(soup)
 
+    # Most recent AGM
+    last_agm = getAGM(soup)
+
     # Twitter
     # twitter_url = getTwitterURL(group_name, driver)
-  
-    data = [group_name, chair_name, chair_party, benefits_in_kind]
+
+    data = [group_name, chair_name, chair_party, benefits_in_kind, last_agm]
     
     # driver.quit()
 
@@ -118,6 +132,3 @@ def getData(url):
 
 url = "https://publications.parliament.uk/pa/cm/cmallparty/210310/contents.htm"
 callScrape(url)
-
-
-# how many tweets in past week
